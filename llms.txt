@@ -1,0 +1,25 @@
+# CargoFlow
+
+> CargoFlow is transport, fleet and warehouse management software made for India. It brings a fleet owner's trucks, a godown operator's stock and the money between them into one place, and sends the owner a daily report on WhatsApp.
+
+## Who it is for
+- Fleet owners and transporters (trucking companies of any size)
+- Warehouse, godown, cold-store and tank-storage operators
+- Their accounts, operations and tracking teams
+
+## What problem it solves
+Indian transport and storage businesses often run on diesel sheets, phone calls to drivers, Excel files and WhatsApp groups, with the same bill entered in several places. CargoFlow replaces that with one system, so questions such as "how much did we earn today?" are already answered.
+
+## What it is built around
+Indian practice: GST invoicing, TDS, FASTag tolls, e-way bills, challans, drivers' cash and bhatta, floor-stacked godowns as well as racked stores, and liquid or tanker cargo. It works on an ordinary phone, in English and Hindi.
+
+## Good to know
+- Reports can be exported to Excel and PDF; it is meant to work alongside the accountant's tools.
+- If a figure was never recorded, CargoFlow says so instead of showing an invented number.
+- Pricing depends on the size of the fleet and godown and is discussed in the demo.
+
+## How to get a demo
+Open the home page and tap "Book a demo": choose who you are, what hurts most and a time slot, then send it on WhatsApp. No form to fill.
+
+## Keywords
+transport software India, fleet management software India, trucking software, warehouse management software India, godown software, logistics ERP, transport accounting, GST billing for transporters, FASTag, e-way bill, WhatsApp daily report for transporters.
