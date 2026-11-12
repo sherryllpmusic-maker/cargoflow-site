@@ -167,3 +167,10 @@ footer{position:relative;z-index:3;text-align:center;font-size:13px;opacity:.6;p
 .copy.rv{transition-delay:0ms!important}
 [data-theme=light] .glass{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(255,255,255,.4) 55%,rgba(255,255,255,.62))}
 [data-theme=dark] .copy{background:linear-gradient(135deg,rgba(18,20,19,.72),rgba(18,20,19,.5) 55%,rgba(18,20,19,.66))}
+
+.nums{position:relative;margin-top:18px;display:grid;gap:12px}
+.num{border-radius:26px 26px 26px 8px;padding:16px 18px;background:linear-gradient(135deg,rgba(255,255,255,.2),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.3);box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+.num span{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.7}
+.num b{display:block;font-family:var(--disp);font-size:clamp(30px,9vw,44px);letter-spacing:-.03em;line-height:1.1;margin-top:4px}
+.n1 b{color:#ffb27d}.n2{margin-left:9%;border-radius:26px 26px 8px 26px}.n2 b{color:#ff8f8f}
+.samp{font-size:11px;opacity:.55;text-align:right}
