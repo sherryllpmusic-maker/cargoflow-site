@@ -1,8 +1,10 @@
 /* CargoFlow site: the road and truck, scroll effects, the question toy, language switch, and the tap-only demo booking. */
 (() => {
   'use strict';
-  /* ---- SET THESE TWO BEFORE GOING LIVE ---------------------------------------------------------------------------------------------- */
+  /* ---- SET THESE BEFORE GOING LIVE ---------------------------------------------------------------------------------------------- */
   const WHATSAPP_NUMBER = '';   // digits with country code, e.g. '919812345678'. The booking opens WhatsApp to this number, so the visitor's own number arrives with it.
+  const NTFY_TOPIC = 'cf-demo-e15a63092d421f10a1'; // free phone alerts: install the ntfy app, subscribe to this name, and every booking arrives as a notification with the details and a Call button. No account, no server.
+  const DEMO_API = '';          // the CargoFlow server address + /api/public/demo-request (e.g. 'https://your-cargoflow.onrender.com/api/public/demo-request'). Every booking is saved there and the owner is told at once on WhatsApp, email and in the app, with the visitor's number and chosen time. No outside service involved.
   const FORM_ENDPOINT = '';     // optional: a free form service URL (Web3Forms, Formspree...). Booking choices are also posted here so no lead is lost.
   const PHOTOS = [];            // optional: ['assets/photos/truck1.jpg', ...] your own photos; a strip appears when this list has files.
   /* ----------------------------------------------------------------------------------------------------------------------------------- */
@@ -114,16 +116,20 @@
       $$('.opt', optsEl).forEach((o, i) => o.dataset.g = i < 4 ? 'd' : 's');
       const next = el('button', 'cta', 'Next'); next.type = 'button'; const check = () => { next.disabled = !(pick.day && pick.slot); }; check(); next.onclick = () => { step = 3; render(); }; footEl.append(back(), next);
     } else {
-      titleEl.textContent = 'All set. Send it on WhatsApp.';
-      optsEl.appendChild(el('div', 'sum', `<b>${pick.who}</b><br>Hurts: ${pick.pains.join(', ')}<br>Demo: ${pick.day}, ${pick.slot}`));
-      const go = el('button', 'cta', 'Send on WhatsApp'); go.type = 'button'; go.onclick = send; footEl.append(back(), go);
-      const alt = el('div', 'alt', ''); const inp = el('input'); inp.type = 'tel'; inp.inputMode = 'numeric'; inp.placeholder = 'Prefer a call? Your number'; inp.autocomplete = 'tel'; inp.setAttribute('aria-label', 'Your phone number');
-      const ok = el('button', '', 'Call me'); ok.type = 'button'; ok.onclick = () => { pick.phone = inp.value.trim(); if (pick.phone.replace(/\D/g, '').length < 10) { inp.focus(); return; } post(); optsEl.appendChild(el('p', 'done', 'Thank you. We will call you at the time you chose.')); alt.remove(); };
+      titleEl.textContent = 'Your number, we will call you.';
+      const alt = el('div', 'alt', ''); const inp = el('input'); inp.type = 'tel'; inp.inputMode = 'numeric'; inp.placeholder = 'Your mobile number'; inp.autocomplete = 'tel'; inp.value = pick.phone || ''; inp.setAttribute('aria-label', 'Your phone number');
+      const ok = el('button', 'cta', 'Book my demo'); ok.type = 'button'; let sent = false;
+      ok.onclick = () => { if (sent) return; pick.phone = inp.value.trim(); if (pick.phone.replace(/\D/g, '').length < 10) { inp.focus(); inp.setAttribute('aria-invalid', 'true'); return; } sent = true; ok.disabled = true; post(); alt.remove(); footEl.innerHTML = ''; optsEl.appendChild(el('p', 'done', `Thank you. We will call you ${pick.day}, ${pick.slot}.`)); };
       alt.append(inp, ok); optsEl.appendChild(alt);
+      footEl.append(back());
     }
   }
   const message = () => `Hi CargoFlow, I would like a demo.\nI am a: ${pick.who}\nBiggest headaches: ${pick.pains.join(', ')}\nBest time: ${pick.day}, ${pick.slot}${pick.phone ? '\nCall me on: ' + pick.phone : ''}`;
-  function post() { if (!FORM_ENDPOINT) return; try { fetch(FORM_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ subject: 'CargoFlow demo request', ...pick, message: message() }), keepalive: true }); } catch (e) {} }
+  function ntfy() { if (!NTFY_TOPIC) return; const d = pick.phone.replace(/\D/g, '').slice(-10); const body = { topic: NTFY_TOPIC, title: 'CargoFlow demo request' + (pick.phone ? ': ' + pick.phone : ''), message: `${pick.who}
+Hurts: ${pick.pains.join(', ')}
+Wants demo: ${pick.day}, ${pick.slot}
+${pick.phone ? 'Call: ' + pick.phone : 'No number left (they may message on WhatsApp)'}`, priority: 5, tags: ['telephone_receiver'] }; if (d.length === 10) body.actions = [{ action: 'view', label: 'Call now', url: 'tel:+91' + d }]; try { fetch('https://ntfy.sh/', { method: 'POST', body: JSON.stringify(body), keepalive: true }); } catch (e) {} }
+  function post() { ntfy(); if (DEMO_API) { try { fetch(DEMO_API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ who: pick.who, pains: pick.pains, day: pick.day, slot: pick.slot, phone: pick.phone, message: message() }), keepalive: true }); } catch (e) {} } if (!FORM_ENDPOINT) return; try { fetch(FORM_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ subject: 'CargoFlow demo request', ...pick, message: message() }), keepalive: true }); } catch (e) {} }
   function send() {
     post();
     if (WHATSAPP_NUMBER) { location.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message())}`; return; }
